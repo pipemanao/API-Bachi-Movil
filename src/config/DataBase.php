@@ -1,9 +1,9 @@
 <?php
 class DataBase {
 	private $dbHost = 'localhost';
-	private $dbUser = 'root';
-	private $dbPassword = '';
-	private $dbName = 'info104';
+	private $dbUser = 'vulzsite_admin';
+	private $dbPassword = '4IufG)KHR)sI';
+	private $dbName = 'vulzsite_api';
 
 	public function connection() {
 		$pdo = new PDO('mysql:host=' . $this->dbHost . ';dbname=' . $this->dbName, $this->dbUser, $this->dbPassword);

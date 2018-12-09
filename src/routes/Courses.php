@@ -12,19 +12,20 @@ $app->get('/courses/getall', function(Request $request, Response $response) {
 		$db = new DataBase();
 		$db = $db->connection();
 		$result = $db->query($sql);
+		$courses['courses'] = [];
 
 		if($result->rowCount() > 0) {
 			$courses['courses'] = $result->fetchAll(PDO::FETCH_OBJ);
 
-			echo json_encode($courses);
+			return sendOkResponse(json_encode($courses), $response);
 		} else {
-			echo json_encode(array('Error' => 'No existen datos en la base de datos.'));
+			return sendOkResponse(json_encode(['Error' => 'No existen datos en la base de datos.']), $response);
 		}
 
 		$result = null;
 		$db = null;
-	} catch(PDOException $e)  {
-		echo json_encode(array('Error' => $e->getMessage()));
+	} catch(PDOException $e) {
+		return sendOkResponse(json_encode(['Error' => $e->getMessage()]), $response);
 	}
 });
 
@@ -42,16 +43,16 @@ $app->get('/courses/getfavorites/{iduser}', function(Request $request, Response 
 
 		if($result->rowCount() > 0) {
 			$courses['courses'] = $result->fetchAll(PDO::FETCH_OBJ);
-			
-			echo json_encode($courses);
+
+			return sendOkResponse(json_encode($courses), $response);
 		} else {
-			echo json_encode(array('Error' => 'No tienes cursos agregados.'));
+			return sendOkResponse(json_encode(['Error' => 'No tienes cursos agregados.']), $response);
 		}
 
 		$result = null;
 		$db = null;
-	} catch(PDOException $e)  {
-		echo json_encode(array('Error' => $e->getMessage()));
+	} catch(PDOException $e) {
+		return sendOkResponse(json_encode(['Error' => $e->getMessage()]), $response);
 	}
 });
 
@@ -63,21 +64,21 @@ $app->post("/courses/addfavorite", function(Request $request, Response $response
 
 	$sql = "INSERT INTO tbl_favorite_courses values (DEFAULT, NOW(), :userId, :courseId)";
 	try {
-		$pdo = new DataBase();
-		$pdo = $pdo->Connection();
-		$result = $pdo->prepare($sql);
+		$db = new DataBase();
+		$db = $db->Connection();
+		$result = $db->prepare($sql);
 
 		$result->bindParam("userId", $userId);
 		$result->bindParam("courseId", $courseId);
 
 		$result->execute();
 
-		echo json_encode(array('Info' => 'Curso agregado con exito.'));
+		return sendOkResponse(json_encode(['Info' => 'Curso agregado con exito.']), $response);
 
 		$result = null;
 		$pdo = null;
 	} catch(PDOException $e) {
-		echo json_encode(array('Error' => $e->getMessage()));
+		return sendOkResponse(json_encode(['Error' => $e->getMessage()]), $response);
 	}
 });
 
@@ -99,14 +100,14 @@ $app->delete("/courses/unfavoritecourse/{iduser}/{idcourse}", function(Request $
 		$result->execute();
 
 		if($result->rowCount() > 0) {
-			echo json_encode(array('Info' => 'Curso quitado con exito'));
+			return sendOkResponse(json_encode(['Info' => 'Curso quitado con exito']), $response);
 		} else {
-			echo json_encode(array('Error' => 'No tienes el curso como favorito.'));
+			return sendOkResponse(json_encode(['Error' => 'No tienes el curso como favorito.']), $response);
 		}
 
 		$result = null;
 		$pdo = null;
 	} catch(PDOException $e) {
-		echo json_encode(array('Error' => $e->getMessage()));
+		return sendOkResponse(json_encode(['Error' => $e->getMessage()]), $response);
 	}
 });
