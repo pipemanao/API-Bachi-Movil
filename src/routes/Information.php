@@ -3,7 +3,6 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-$app = new \Slim\App;
 
 $app->get('/information/getall', function(Request $request, Response $response){
 	$sql = 'SELECT * FROM tbl_course_information';
