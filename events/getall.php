@@ -5,17 +5,20 @@ require_once '../DataBase.php';
 header('Content-type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-$sql = 'SELECT * FROM tbl_event';
+$sql = 'SELECT A.*, B.username 
+		FROM tbl_post A, tbl_user B 
+		WHERE A.creatorid = B.id 
+		AND A.parentpost = 0';
 try {
 	$db = new DataBase();
 	$db = $db->connection();
 	$result = $db->query($sql);
-	$event['event'] = [];
+	$post['post'] = [];
 
 	if($result->rowCount() > 0) {
-		$event['event'] = $result->fetchAll(PDO::FETCH_OBJ);
+		$post['post'] = $result->fetchAll(PDO::FETCH_OBJ);
 
-		echo json_encode($event);
+		echo json_encode($post);
 	} else {
 		echo json_encode(['Error' => 'No existen datos en la base de datos.']);
 	}
